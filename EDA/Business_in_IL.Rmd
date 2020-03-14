@@ -1,3 +1,10 @@
+    ---
+    title: "Something fascinating"
+    author: "Jenny Bryan"
+    date: "2020-02-11"
+    output: github_document
+    ---
+
 ```{r, echo=FALSE}
 library(ggplot2)
 library(mapproj)
