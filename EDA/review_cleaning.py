@@ -25,7 +25,7 @@ review.to_csv("reviews.csv")
 
 #GRAB THE REVIEWS FOR ILLINOIS ONLY
 review = pd.read_csv('reviews.csv')
-business = pd.read_csv('IL_business.csv')
+business = pd.read_csv('business.csv')
 
 business_id_ls = business.business_id.unique()
 review_idx = [i for i in range(review.shape[0]) if review.business_id[i] in business_id_ls]
