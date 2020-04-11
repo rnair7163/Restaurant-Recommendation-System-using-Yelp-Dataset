@@ -6,19 +6,19 @@ Created on Sun Apr  5 22:52:22 2020
 """
 import pandas as pd
 
-data_review = pd.read_csv('IL_review.csv',index_col=0)
+data_review = pd.read_csv('D:/yelp/IL_review.csv',index_col=0)
 data_review.head(3)
 
 #USERS' FREQUENCIES
 data_review.groupby('user_id').count()['business_id'].describe()
 
-data_business = pd.read_csv('IL_business.csv',index_col=0)
-data_users = pd.read_csv('IL_user.csv',index_col=0)
+data_business = pd.read_csv('D:/yelp/business_cj.csv',index_col=0)
+data_users = pd.read_csv('D:/yelp/IL_users.csv',index_col=0)
 
 user_tag = data_review.merge(data_business, left_on='business_id', right_on='business_id')
 user_tag.columns
 
-user_tag2 = user_tag.groupby('user_id').sum()
+user_tag2 = user_tag.groupby('user_id').sum().iloc[:,12:]
 user_tag2.shape
 
 tag = []
@@ -36,5 +36,9 @@ for tag in tag_list:
     data_users[tag] = 0
 
 for ind,val in enumerate(tag_all):
-    row = list(data_users).index(tag_all_df['user_id'][ind])
+    row = list(data_users['user_id']).index(tag_all_df['user_id'][ind])
     data_users.loc[row,val] = 1
+    
+data_users.iloc[:,24:].describe()
+
+data_users.to_csv("D:/yelp/uers_tag.csv")
