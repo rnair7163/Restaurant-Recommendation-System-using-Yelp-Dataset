@@ -69,7 +69,7 @@ P = pd.DataFrame(user_id_vectors.to_array(), index = user_id_df.index, columns =
 Q = pd.DataFrame(busniess_id_vectors.to_array(), index = business_id_df.index, columns = business_id_vectorizer.get_features_names())
 
 # Matrix factorization
-def matrix_fectorize(R, P, Q, steps = 10, lamda = 0.02, gamma = 0.01):
+def matrix_factorization(R, P, Q, steps = 10, lamda = 0.02, gamma = 0.01):
 	for step in range(steps):
 		for i in R.index:
 			for j in R.columns:
