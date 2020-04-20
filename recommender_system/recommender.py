@@ -64,31 +64,31 @@ business_id_vectorizer = TfidfVectorizer(tokenizer = WordPunctTokenizer().tokeni
 busniess_id_vectors = business_id_vectorizer.fit_transform(business_id_df['text'])
 
 # Create a matrix with user_id and business_id as its rows and columns respectively
-user_business_matrix = pd.pivot_table(data, values = 'stars', index = ['user_id'], columns = ['business_id'])
+userid_rating_matrix = pd.pivot_table(data, values = 'stars', index = ['user_id'], columns = ['business_id'])
 P = pd.DataFrame(user_id_vectors.to_array(), index = user_id_df.index, columns = user_id_vectorizer.get_features_names())
 Q = pd.DataFrame(busniess_id_vectors.to_array(), index = business_id_df.index, columns = business_id_vectorizer.get_features_names())
 
 # Matrix factorization
-def matrix_fectorize(R, P, Q, steps = 10, lamda = 0.02, gamma = 0.01):
-	for step in range(steps):
-		for i in R.index:
-			for j in R.columns:
-				if R.loc[i,j] > 0:
-					eij = R.loc[i,j] - np.dot(P.loc[i] - Q.loc[j])
-					P.loc[i] += gamma*(eij*Q.loc[j] - lamda*P.loc[i])
-					Q.loc[j] += gamma*(eij - np.dot(P.loc[i] - lamda*Q.loc[j]))
-		e = 0
-		for i in R.index:
-			for j in R.columns:
-				if R.loc[i,j] > 0:
-					e += pow(R.loc[i,j] - np.dot(P.loc, Q.loc[j]), 2) + lamda*(pow(np.linalg.norm(P.loc[i]), 2) + pow(np.linalg.norm(Q.loc[j]) ,2))
-		if e < 0.001:
-			break
-
-	return P,Q
+def matrix_factorization(R, P, Q, steps=100, gamma=0.001,lamda=0.02):
+    for step in range(steps):
+        for i in R.index:
+            for j in R.columns:
+                if R.loc[i,j]>0:
+                    eij=R.loc[i,j]-np.dot(P.loc[i],Q.loc[j])
+                    P.loc[i]=P.loc[i]+gamma*(eij*Q.loc[j]-lamda*P.loc[i])
+                    Q.loc[j]=Q.loc[j]+gamma*(eij*P.loc[i]-lamda*Q.loc[j])
+        e=0
+        for i in R.index:
+            for j in R.columns:
+                if R.loc[i,j]>0:
+                    e= e + pow(R.loc[i,j]-np.dot(P.loc[i],Q.loc[j]),2)+lamda*(pow(np.linalg.norm(P.loc[i]),2)+pow(np.linalg.norm(Q.loc[j]),2))
+        if e<0.001:
+            break
+        
+    return P,Q
 
 # run matrix factorization
-P, Q = matrix_factorization(userid_rating_matrix, P, Q, steps=10, gamma=0.001,lamda=0.02)
+P, Q = matrix_factorization(userid_rating_matrix, P, Q, steps=100, gamma=0.001,lamda=0.02)
 
 # export model
 output = open('recommender_model.pkl', 'wb')
