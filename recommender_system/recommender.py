@@ -122,7 +122,7 @@ P, Q = matrix_factorization(user_business_matrix, P, Q, steps=10, gamma=0.001,la
 output = open('recommender_model.pkl', 'wb')
 pickle.dump(P,output)
 pickle.dump(Q,output)
-pickle.dump(userid_vectorizer,output)
+pickle.dump(user_id_vectorizer,output)
 output.close()
 
 
