@@ -4,32 +4,55 @@ from sklearn.externals import joblib
 import traceback
 import pandas as pd
 import numpy as np
+import string
+from nltk.corpus import stopwords
+import pickle
 
-# Your API definition
+# API definition
 app = Flask(__name__)
 
 @app.route("/")
 def hello():
     return "Welcome to machine learning model APIs!"
 
-@app.route('/predict', methods=['POST'])
-def predict():
-    if mod:
-        try:
-            json_ = request.json
-            print(json_)
-            query = str(json_)
+stop_words = list(stopwords.words('english'))
 
-            prediction = list(mod.text_process(query))
+# Function for text processing
+def text_process(text):
+	"""
+	removes punctuation
+	removes the stop words
 
-            return jsonify({'prediction': str(prediction)})
+	"""
+	nopunc = [char for char in text if char not in string.punctuation]
+	return " ".join([word for word in nopunc if word.lower() not in stop_words])
 
-        except:
+def recommender(words):
+    test_df= pd.DataFrame([words], columns=['text'])
+    test_df['text'] = test_df['text'].apply(text_process)
+    test_vectors = user_id_vectorizer.transform(test_df['text'])
+    test_v_df = pd.DataFrame(test_vectors.toarray(), index=test_df.index, columns = user_id_vectorizer.get_feature_names())
+    predictItemRating=pd.DataFrame(np.dot(test_v_df.loc[0],Q.T),index= Q.index,columns=['Rating'])
+    topRecommendations=pd.DataFrame.sort_values(predictItemRating,['Rating'],ascending=[0])[:7]
+    required = []
+    for i in topRecommendations.index:
+        temp = {}
+        temp['name'] = df_business[df_business['business_id']==i]['name'].iloc[0]
+        temp['categories'] = df_business[df_business['business_id']==i]['categories'].iloc[0]
+        temp['rating'] = str(df_business[df_business['business_id']==i]['stars'].iloc[0])+ ' '+str(df_business[df_business['business_id']==i]['review_count'].iloc[0])
+        required.append(temp)
+    return required
 
-            return jsonify({'trace': traceback.format_exc()})
-    else:
-        print ('Train the model first')
-        return ('No model here to use')
+@app.route('/<string:query>')
+def predict(query):
+    try:
+        prediction = recommender(query)
+
+        return jsonify({'recommendations': str(prediction)})
+
+    except:
+
+        return jsonify({'trace': traceback.format_exc()})
 
 if __name__ == '__main__':
     try:
@@ -37,7 +60,8 @@ if __name__ == '__main__':
     except:
         port = 12345 # If you don't provide any port the port will be set to 12345
 
-    mod = joblib.load("D:/DPA Data/dpa_project/recommender_model.pk") # Load "model.pkl"
-    print ('Model loaded')
+    df_business = pickle.load(open('model/recom_business.pkl', 'rb'))
+    Q = pickle.load(open('model/recom_q.pkl', 'rb'))
+    user_id_vectorizer = pickle.load(open('model/recom_user_id_vec.pkl', 'rb'))
 
     app.run(port=port, debug=True)
