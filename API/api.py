@@ -1,19 +1,19 @@
 # Dependencies
 from flask import Flask, request, jsonify
-from sklearn.externals import joblib
 import traceback
 import pandas as pd
 import numpy as np
 import string
 from nltk.corpus import stopwords
 import pickle
+from flask_cors import CORS, cross_origin
+import json
+from scipy import sparse
+from annoy import AnnoyIndex
 
-# API definition
+# Your API definition
 app = Flask(__name__)
-
-@app.route("/")
-def hello():
-    return "Welcome to machine learning model APIs!"
+CORS(app)
 
 stop_words = list(stopwords.words('english'))
 
@@ -27,6 +27,8 @@ def text_process(text):
 	nopunc = [char for char in text if char not in string.punctuation]
 	return " ".join([word for word in nopunc if word.lower() not in stop_words])
 
+
+# Function for new users
 def recommender(words):
     test_df= pd.DataFrame([words], columns=['text'])
     test_df['text'] = test_df['text'].apply(text_process)
@@ -39,29 +41,64 @@ def recommender(words):
         temp = {}
         temp['name'] = df_business[df_business['business_id']==i]['name'].iloc[0]
         temp['categories'] = df_business[df_business['business_id']==i]['categories'].iloc[0]
-        temp['rating'] = str(df_business[df_business['business_id']==i]['stars'].iloc[0])+ ' '+str(df_business[df_business['business_id']==i]['review_count'].iloc[0])
+        temp['rating'] = df_business[df_business['business_id']==i]['stars'].iloc[0]
         required.append(temp)
     return required
+
+# Function for existing users
+def sample_recommender(user_id, n_items=10):
+    n_users, n_items = train.shape
+    known_positives = business['name'][train.tocsr()[user_id].indices]
+    top_items = [business['name'][i] for i in u.get_nns_by_vector(np.append(user_embeddings[user_id], 0), 600)]
+    return top_items[:5]
+
+@app.route("/")
+def hello():
+    return "Welcome to machine learning model APIs!"
 
 @app.route('/<string:query>')
 def predict(query):
     try:
         prediction = recommender(query)
 
-        return jsonify({'recommendations': str(prediction)})
+        return jsonify(prediction);
 
     except:
 
         return jsonify({'trace': traceback.format_exc()})
 
+@app.route('/id/<int:userid>')
+def recommend(userid):
+    try:
+        recommend = sample_recommender(userid)
+
+        return jsonify(recommend);
+
+    except:
+
+        return jsonify({'trace': traceback.format_exc()})
+
+# Execution starts here
 if __name__ == '__main__':
     try:
         port = int(sys.argv[1]) # This is for a command-line input
     except:
-        port = 12345 # If you don't provide any port the port will be set to 12345
+        port = 5000 # If you don't provide any port the port will be set to 12345
 
+    # For new users
     df_business = pickle.load(open('model/recom_business.pkl', 'rb'))
     Q = pickle.load(open('model/recom_q.pkl', 'rb'))
     user_id_vectorizer = pickle.load(open('model/recom_user_id_vec.pkl', 'rb'))
 
+    # For existing users
+    business = pd.read_csv("business_model_2.csv")
+    train = sparse.load_npz("model/train_2_model.npz")
+    model = pickle.load(open('model/model_opt.pkl', 'rb'))
+    _, user_embeddings = model.get_user_representations()
+
+    f = 59
+    u = AnnoyIndex(f)
+    u.load('model/yelp_item_Annoy_member_idx.ann') # super fast, will just mmap the file
+
+    # For running the api
     app.run(port=port, debug=True)
