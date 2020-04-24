@@ -1,5 +1,11 @@
-<div *ngFor="let recommendation of recommendations">
-    <h1>{{recommendation.name}}</h1>
-    <h2>{{recommendation.categories}}</h2>
-    <h3>{{recommendation.rating}}</h3>
-</div>
+<mat-card *ngFor="let recommendation of recommendations">
+    <mat-card-title>
+        {{recommendation.name}}
+    </mat-card-title>
+    <mat-card-content>
+        Categories : {{recommendation.categories}}
+    </mat-card-content>
+    <mat-card-content>
+        Rating : {{recommendation.rating}}
+    </mat-card-content>
+</mat-card>

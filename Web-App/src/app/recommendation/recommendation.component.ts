@@ -12,6 +12,8 @@ export class RecommendationComponent implements OnInit {
 
   recommendations :any;
   k: any;
+  max = 5;
+  isReadOnly = true;
   ngOnInit(): void {
     this.recommendations = this.dataService.recommendation;
     let recs = this.recommendations;
