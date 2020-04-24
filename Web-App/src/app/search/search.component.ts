@@ -24,4 +24,13 @@ export class SearchComponent implements OnInit {
       this.router.navigate(['/recommendation']);
     })
   }
+
+  createId(value: number){
+    return this.httpClient.get('http://127.0.0.1:5000/user/'+ value)
+    .subscribe((response: any) => {
+      console.log(response);
+      this.dataService.existingUserRec = response;
+      this.router.navigate(['/user']);
+    })
+  }
 }

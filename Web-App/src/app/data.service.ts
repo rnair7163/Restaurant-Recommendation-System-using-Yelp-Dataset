@@ -6,5 +6,6 @@ import { Injectable } from '@angular/core';
 export class DataService {
 
   recommendation: any;
+  existingUserRec: any;
   constructor() { }
 }

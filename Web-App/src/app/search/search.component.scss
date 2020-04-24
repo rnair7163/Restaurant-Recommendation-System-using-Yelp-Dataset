@@ -1,7 +1,7 @@
 @import "~font-awesome/css/font-awesome.css";
 .search-box {
     position: absolute;
-    top: 50%;
+    top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
     background: #1976d2;
@@ -10,13 +10,6 @@
     padding: 10px;
 }
 
-// .search-box:hover>.search-txt {
-//     width: 240px;
-//     padding: 0 6px;
-// }
-// .search-box:hover>.search-btn {
-//     background: white;
-// }
 .search-btn {
     color: white;
     float: right;
@@ -43,7 +36,7 @@
     padding-left: 10px;
 }
 
-::placeholder {
+.search-box> ::placeholder {
     color: white;
     opacity: 0.5;
 }
@@ -58,4 +51,41 @@ svg#clouds {
 
 path {
     fill: #1976d2;
+}
+
+.user-box {
+    position: absolute;
+    top: 85%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #ffffff;
+    height: 40px;
+    border-radius: 40px;
+    padding: 10px;
+}
+
+.user-btn {
+    color: #1976d2;
+    float: right;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.user-txt {
+    border: none;
+    background: none;
+    outline: none;
+    float: left;
+    padding: 0;
+    color: #1976d2;
+    font-size: 16px;
+    transition: 0.4s;
+    line-height: 40px;
+    width: 240px;
+    padding-left: 10px;
 }

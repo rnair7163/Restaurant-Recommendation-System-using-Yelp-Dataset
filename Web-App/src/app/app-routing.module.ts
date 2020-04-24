@@ -8,7 +8,7 @@ import { ExistingUserComponent } from './existing-user/existing-user.component';
 const routes: Routes = [
   {path: '', component: SearchComponent},
   {path: 'recommendation', component: RecommendationComponent},
-  {path: 'id/:num', component: ExistingUserComponent}
+  {path: 'user', component: ExistingUserComponent}
 ];
 
 @NgModule({

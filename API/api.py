@@ -43,14 +43,21 @@ def recommender(words):
         temp['categories'] = df_business[df_business['business_id']==i]['categories'].iloc[0]
         temp['rating'] = df_business[df_business['business_id']==i]['stars'].iloc[0]
         required.append(temp)
-    return required
+    return required[:5]
 
 # Function for existing users
-def sample_recommender(user_id, n_items=10):
-    n_users, n_items = train.shape
-    known_positives = business['name'][train.tocsr()[user_id].indices]
-    top_items = [business['name'][i] for i in u.get_nns_by_vector(np.append(user_embeddings[user_id], 0), 600)]
-    return top_items[:5]
+def sample_recommender(user_id):
+	n_users, n_items = train.shape
+	known_positives = business['name'][train.tocsr()[user_id].indices]
+	top_items = [business['name'][i] for i in u.get_nns_by_vector(np.append(user_embeddings[user_id], 0), 600)]
+	s_required = []
+	for x in top_items[:5]:
+	    s_temp = {}
+	    s_temp['name'] = x
+	    s_temp['category'] = business[business.name == x]['category'].iloc[0]
+	    s_temp['rating'] = business[business.name == x]['stars'].iloc[0]
+	    s_required.append(s_temp)
+	return s_required
 
 @app.route("/")
 def hello():
@@ -67,7 +74,7 @@ def predict(query):
 
         return jsonify({'trace': traceback.format_exc()})
 
-@app.route('/id/<int:userid>')
+@app.route('/user/<int:userid>')
 def recommend(userid):
     try:
         recommend = sample_recommender(userid)

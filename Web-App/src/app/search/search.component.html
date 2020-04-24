@@ -1,7 +1,14 @@
+<div class="user-box">
+    <input #existingBox class="user-txt" placeholder="For existing users, enter id" (keyup.enter)="createId(existingBox.value)" autocomplete="false">
+    <div class="user-btn" href="#">
+        <i class="fa fa-search" (click)="createId(existingBox.value)"></i>
+    </div>
+</div>
+
 <div class="search-box">
-    <input #box class="search-txt" placeholder="Type here..." (keyup.enter)="createRecommendation(box.value)" autocomplete="false">
+    <input #newBox class="search-txt" placeholder="For new users, enter query" (keyup.enter)="createRecommendation(newBox.value)" autocomplete="false">
     <div class="search-btn" href="#">
-        <i class="fa fa-search" (click)="createRecommendation(box.value)"></i>
+        <i class="fa fa-search" (click)="createRecommendation(newBox.value)"></i>
     </div>
 </div>
 
