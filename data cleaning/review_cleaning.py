@@ -19,6 +19,7 @@ with open(path, encoding = 'utf-8') as fin:
         
 review = pd.DataFrame(review)
 review.shape
+
 #WRITE THE REVIEW FILE INTO CSV FORMAT
 review.to_csv("reviews.csv")
 
@@ -32,12 +33,12 @@ review_idx = [i for i in range(review.shape[0]) if review.business_id[i] in busi
 
 review = review.iloc[review_idx,:]
 review = review.drop(columns=['Unnamed: 0'])
-review.head()
 
 review.index = range(review.shape[0])
 
 yr_ls = [eval(x.split('-')[0]) for x in review.date]
 review['year'] = yr_ls
+
 #WRITE THE FILE INTO CSV FORMAT
 review.to_csv('IL_review.csv')
 
