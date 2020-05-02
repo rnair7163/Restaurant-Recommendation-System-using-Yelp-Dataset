@@ -2,8 +2,14 @@
 This is our academic project for CSP-571 "Data Preparation And Analysis". 
 In this project we built a personalized recommender web app using Yelp dataset of restaurants. We tested various models like Pure Collaborative, Approximate Nearest Neighbour, K-NN, Naive Bayes and Hybrid Maxtrix Factorization on various hyperparameters which were tuned using the library "scikit optimizer"
 We tested the models using AUC which is a decision-support metric that checks whether customers like the item or not. In our case, figuring out customer preference in general is more important and practical. 
-
 And for deployment, we used Angular8 and Flask frameworks.
+
+### Datasets:- 
+#### Primary Dataset
+The primary dataset for our model was [Yelp dataset](https://www.yelp.com/dataset). From that, we used 3 datasets namely business.json, reviews.json and users.json. 
+
+#### Secondary Dataset
+The Secondary dataset for our model was [median income for each postal code](https://www.census.gov/) which was then mapped to businesses.
 
 ### Data Cleaning and Data Preaparation
 #### Business
