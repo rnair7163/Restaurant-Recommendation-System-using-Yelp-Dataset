@@ -105,7 +105,7 @@ if __name__ == '__main__':
 
     f = 59
     u = AnnoyIndex(f)
-    u.load('model/yelp_item_Annoy_member_idx.ann') # super fast, will just mmap the file
+    u.load('model/yelp_item_Annoy_member_idx.ann') # super fast, will just map the file
 
     # For running the api
     app.run(port=port, debug=True)
