@@ -11,7 +11,7 @@ The primary dataset for our model was [Yelp dataset](https://www.yelp.com/datase
 #### Secondary Dataset
 The Secondary dataset for our model was [median income for each postal code](https://www.census.gov/) which was then mapped to businesses.
 
-### Data Cleaning and Data Preaparation
+### Data Cleaning and Data Preparation
 #### Business
 Following are the ways in which we cleaned and prepared our Business dataset:
 
