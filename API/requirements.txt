@@ -99,7 +99,7 @@ jdcal==1.4.1
 jedi==0.13.3
 Jinja2==2.11.1
 jmespath==0.9.4
-joblib==0.14.1
+joblib==1.2.0
 json5==0.8.4
 jsonify==0.5
 jsonschema==3.0.1
